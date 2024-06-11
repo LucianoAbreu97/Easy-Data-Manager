@@ -16,13 +16,10 @@ export default function RegisterScreen({navigation}) {
 
     const createUser = async (name, surname, email, password) => {
         try {
-          // Create a new user in Firebase Authentication
           const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       
-          // Get the user's ID
           const userId = userCredential.user.uid;
       
-          // Create a new document in Firestore with the user's data
           await setDoc(doc(db, "users", userId), {
             name: name,
             surname: surname,
@@ -30,12 +27,11 @@ export default function RegisterScreen({navigation}) {
           });
 
             const userDocRef = doc(db, "users", userId);
-            // Create an empty collection for the user's objects
-            const userRef = collection(userDocRef, 'objetos'); // Referencing the subcollection
-            await addDoc(userRef, {}); // Add an empty document to mark the collection
+            const userRef = collection(userDocRef, 'objetos');
+            await addDoc(userRef, {});
       
           console.log("User created successfully!");
-          navigation.navigate('Login'); // Navigate to Login screen after successful registration
+          navigation.navigate('Login');
         } catch (error) {
           console.error(error);
         }
@@ -55,11 +51,9 @@ export default function RegisterScreen({navigation}) {
 
     return (
         <SafeAreaView style={styles.container}>
-            {/* HEADER */}
                 <TouchableOpacity>
                     <Image style={styles.profileIcon} source={require('../assets/ProfileIc.png')} />
                 </TouchableOpacity>
-                {/* BODY */}
             <View style={styles.bodyContainer}>
                 <View style={styles.bodyContainerAux}>
                     <Text style={styles.text}>Nome</Text>
@@ -97,7 +91,6 @@ export default function RegisterScreen({navigation}) {
                     <TouchableOpacity style={styles.button} onPress={handleSignUp}>
                         <Text style={[styles.text, {alignSelf: 'center'}]}>Cadastrar</Text>
                     </TouchableOpacity>
-                    {/* BOTTOM */}
                     <View style={styles.bottomContainer}>
                         <Text>Já tem uma conta?</Text>
                         <TouchableOpacity>
