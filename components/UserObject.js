@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import { View,  Text, TouchableOpacity, StyleSheet} from "react-native"
 import { collection, doc, getDocs, db, deleteDoc, onDelete} from '../firebase/index'
 import config from '../config'
