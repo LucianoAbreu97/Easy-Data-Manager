@@ -16,7 +16,6 @@ export default function HomeScreen({navigation, route}) {
 
     console.log('HomeScreen rendered');
 
-    // Fetch user data from Firestore
     useEffect(() => {
         console.log('Fetching user data...');
         const fetchUserData = async () => {
