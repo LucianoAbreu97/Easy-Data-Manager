@@ -40,7 +40,7 @@ export default function TableScreen({ route, navigation }) {
 
   const renderTableRow = (row) => {
     return (
-      <View key={row.Mes} style={styles.tableRow}>
+      <View key={row.prop} style={styles.tableRow}>
         {objectData?.colunas.map((column, columnIndex) => (
           <ScrollView
             horizontal={true}
@@ -69,7 +69,7 @@ export default function TableScreen({ route, navigation }) {
           <FlatList
             data={objectData.linhas}
             renderItem={({ item }) => renderTableRow(item)}
-            keyExtractor={(item) => item.Mes || item.id}
+            keyExtractor={(item) => item.prop || item.id}
           />
         </View>
       ) : null}
