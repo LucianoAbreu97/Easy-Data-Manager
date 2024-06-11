@@ -7,7 +7,7 @@ export default function TableScreen({ route, navigation }) {
     const { userId, objectId } = route.params;
     const [objectData, setObjectData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [columns, setColumns] = useState([]); // Add a new state for the columns
+    const [columns, setColumns] = useState([]);
 
     useEffect(() => {
         const fetchObjectData = async () => {
@@ -26,7 +26,7 @@ export default function TableScreen({ route, navigation }) {
         const fetchColumns = async () => {
             try {
                 console.log('Fetching columns...');
-                const columnsRef = collection(db, 'users', userId, 'columns'); // Assuming the columns are stored in a separate collection
+                const columnsRef = collection(db, 'users', userId, 'columns');
                 const columnsSnapshot = await getDocs(columnsRef);
                 const fetchedColumns = columnsSnapshot.docs.map(doc => doc.data());
                 setColumns(fetchedColumns);
@@ -37,7 +37,7 @@ export default function TableScreen({ route, navigation }) {
         };
 
         fetchObjectData();
-        fetchColumns(); // Call the fetchColumns function
+        fetchColumns();
     }, [userId, objectId]);
 
     // ...
@@ -48,7 +48,6 @@ export default function TableScreen({ route, navigation }) {
             <Text>Loading...</Text>
         ) : objectData ? (
             <View style={styles.objectContainer}>
-                {/* Render the table header */}
                 <View style={styles.tableRow}>
                     {objectData.colunas.map((column, index) => (
                         <Text key={index} style={styles.tableHeaderCell}>
@@ -57,7 +56,6 @@ export default function TableScreen({ route, navigation }) {
                     ))}
                 </View>
 
-                {/* Render the table rows */}
                 {objectData.linhas.map((row, index) => (
                     <View key={index} style={styles.tableRow}>
                         {objectData.colunas.map((column, columnIndex) => (
