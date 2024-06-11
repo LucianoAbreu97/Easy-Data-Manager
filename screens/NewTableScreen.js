@@ -17,11 +17,11 @@ export default function NewTableScreen({navigation, route}) {
   const [newColumnName, setNewColumnName] = useState('');
 
   const handleAddColumn = () => {
-    setNewColumnName(''); // Clear input before showing dialog
+    setNewColumnName('');
     navigation.navigate('AddColumn', {
         onSave: (columnName) => {
             setColumns([...columns, { name: columnName, type: 'string' }]);
-            setNewColumnName(''); // Clear input after saving
+            setNewColumnName('');
         },
     });
   };
@@ -112,7 +112,6 @@ const saveTable = async () => {
                         updatedData[rowIndex][column.name] = text;
                         setTableData(updatedData);
                       }}
-                      /* placeholder={`Row ${rowIndex + 1}, Col ${colIndex + 1}`} */
                       placeholder={column.name}
                       style={styles.rowInput}
                     />
