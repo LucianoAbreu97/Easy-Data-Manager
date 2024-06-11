@@ -16,20 +16,6 @@ export default function HomeScreen({navigation, route}) {
 
     console.log('HomeScreen rendered');
 
-    useEffect(() => {
-        console.log('Fetching user data...');
-        const fetchUserData = async () => {
-          try {
-            const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid));
-            console.log('UserData fetched: ', userDoc.data());
-            setCurrentUserData(userDoc.data());
-          } catch (error) {
-            console.error(error);
-          }
-        };
-    
-        fetchUserData();
-      }, [userId]);
 
       useEffect(() => {
         console.log('Fetching user objects...');
@@ -49,7 +35,22 @@ export default function HomeScreen({navigation, route}) {
         };
       
         fetchUserObjects();
-      }, [userId]);
+      }, []);
+
+      useEffect(() => {
+        console.log('Fetching user data...');
+        const fetchUserData = async () => {
+          try {
+            const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid));
+            console.log('UserData fetched: ', userDoc.data());
+            setCurrentUserData(userDoc.data());
+          } catch (error) {
+            console.error(error);
+          }
+        };
+    
+        fetchUserData();
+      }, []);
 
       const handleDeleteFromHomeScreen = (collectionPath, documentId) => {
           handleDelete(collectionPath, documentId);
@@ -101,9 +102,9 @@ export default function HomeScreen({navigation, route}) {
                         data={userObjects}
                         renderItem={({ item }) => (
                             <UserObject userId={userId} 
-                            object={item} 
-                            onPress={() => {navigation.navigate('Table', {userId: userId, objectId: item.id})}}
-                            onDelete={handleDeleteFromHomeScreen}
+                                object={item} 
+                                onPress={() => {navigation.navigate('Table', {userId: userId, objectId: item.id})}}
+                                onDelete={handleDeleteFromHomeScreen}
                             />
                         )}
                         keyExtractor={(item) => item.id}

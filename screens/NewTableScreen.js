@@ -9,7 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 export default function NewTableScreen({navigation, route}) {
 
   const {userId} = route?.params || {};
-  console.log('NewTable userId:', userId);
+  console.log('Received userId:', userId);
 
   const [tableName, setTableName] = useState('');
   const [columns, setColumns] = useState([]);
@@ -17,11 +17,11 @@ export default function NewTableScreen({navigation, route}) {
   const [newColumnName, setNewColumnName] = useState('');
 
   const handleAddColumn = () => {
-    setNewColumnName('');
+    setNewColumnName(''); // Clear input before showing dialog
     navigation.navigate('AddColumn', {
         onSave: (columnName) => {
             setColumns([...columns, { name: columnName, type: 'string' }]);
-            setNewColumnName('');
+            setNewColumnName(''); // Clear input after saving
         },
     });
   };
@@ -112,6 +112,7 @@ const saveTable = async () => {
                         updatedData[rowIndex][column.name] = text;
                         setTableData(updatedData);
                       }}
+                      /* placeholder={`Row ${rowIndex + 1}, Col ${colIndex + 1}`} */
                       placeholder={column.name}
                       style={styles.rowInput}
                     />
