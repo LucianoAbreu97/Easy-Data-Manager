@@ -28,12 +28,18 @@ export default function TableScreen({ route, navigation }) {
 
   const renderTableHeader = () => {
     return (
-      <View style={styles.tableRow}>
-        {objectData?.colunas.map((column, index) => (
-          <Text key={index} style={styles.tableHeaderCell}>
-            {column.name}
-          </Text>
-        ))}
+      <View style={styles.tableHeader}>
+        <FlatList
+          showsHorizontalScrollIndicator={false}
+          horizontal={true}
+          data={objectData?.colunas}
+          renderItem={({ item, index }) => (
+            <Text key={index} style={[styles.tableHeaderCell, { numberOfLines: 1 }]}>
+              {item.name}
+            </Text>
+          )}
+          contentContainerStyle={{ paddingHorizontal: 8 }}
+        />
       </View>
     );
   };
@@ -104,6 +110,11 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderBottomWidth: 2,
     borderColor: config.color.secondary,
+  },
+  tableHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
   },
   tableHeaderCell: {
     flex: 1,
