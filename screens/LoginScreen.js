@@ -53,6 +53,7 @@ export default function LoginScreen({navigation}) {
                         onChangeText={(text) => {setEmail(text)}}
                         value={email}
                         paddingLeft={16}
+                        keyboardType='email-address'
                     />
                     <Text style={styles.text}>Password</Text>
                     <TextInput style={styles.input}
