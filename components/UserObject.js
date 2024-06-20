@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { View,  Text, TouchableOpacity, StyleSheet} from "react-native"
+import { View,  Text, TouchableOpacity, StyleSheet, Alert} from "react-native"
 import { collection, doc, getDocs, db, deleteDoc, onDelete} from '../firebase/index'
 import config from '../config'
 import { MaterialIcons } from '@expo/vector-icons';
@@ -17,7 +17,7 @@ export default function UserObject({userId, object, onPress, onDelete}) {
             const tableNames = querySnapshot.docs.map((doc) => doc.id);
             setTableNames(tableNames);
           } catch (error) {
-            console.error('An error occurred while fetching table names:', error);
+            Alert.alert('Ocorreu um error: ', error);
           }
         };
 
@@ -34,7 +34,7 @@ export default function UserObject({userId, object, onPress, onDelete}) {
             onDelete(collectionPath, documentId)
             console.log('Collection deleted successfully');
         } catch (error) {
-            console.error('An error occurred while deleting the collection:', error);
+            console.log('Ocorreu um error durante a exclusão: ', error);
         }
     }
 
