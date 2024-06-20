@@ -5,6 +5,7 @@ const AddColumnModal = ({ navigation, route }) => {
     const [columnName, setColumnName] = useState('');
     const { onSave } = route.params;
 
+
     return (
         <View style={styles.modalContainer}>
             <Text style={styles.modalText}>Digite o nome da coluna:</Text>
@@ -15,16 +16,17 @@ const AddColumnModal = ({ navigation, route }) => {
                 style={styles.modalInput}
             />
             <View style={styles.bottomContainer}>
-                <TouchableOpacity style={styles.button} onPress={() => {onSave(columnName); navigation.goBack();}}>
+                <TouchableOpacity style={styles.button} onPress={() => {navigation.goBack();}}>
                     <Text style={styles.buttonText}>Cancelar</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.button} onPress={() => {onSave(columnName); navigation.goBack();}}>
-                    <Text style={styles.buttonText}>Salvar</Text>
+                    <Text style={styles.buttonText}>Adicionar</Text>
                 </TouchableOpacity>
             </View>
         </View>
     );
 };
+
 
 export default AddColumnModal;
 
@@ -43,7 +45,6 @@ const styles = StyleSheet.create({
     modalInput: {
         borderWidth: 2,
         borderColor: config.color.button,
-        borderRadius: 5,
         padding: 10,
         marginBottom: 10,
         backgroundColor: 'white',
@@ -57,7 +58,7 @@ const styles = StyleSheet.create({
     button: {
         backgroundColor: config.color.button,
         padding: 10,
-        borderRadius: 5,
+        borderRadius: 25,
         marginHorizontal: 10,
         width: 100,
         alignItems: 'center'
