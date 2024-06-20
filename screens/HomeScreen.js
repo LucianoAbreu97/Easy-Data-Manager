@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
+import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity, Alert } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons';
 import { auth, getAuth, db, doc, getDoc, collection, getDocs, signOut } from '../firebase/index';
 import UserObject from '../components/UserObject';
@@ -17,8 +17,7 @@ export default function HomeScreen({navigation, route}) {
     console.log('HomeScreen rendered');
 
 
-      useEffect(() => {
-        console.log('Fetching user objects...');
+    useEffect(() => {
         const fetchUserObjects = async () => {
           try {
             const userRef = doc(collection(db, 'users'), userId);
@@ -28,14 +27,14 @@ export default function HomeScreen({navigation, route}) {
               id: doc.id,
               ...doc.data(),
             }));
-            setUserObjects(objects);
+            setUserObjects(objects); // Update state with new array
           } catch (error) {
             console.error('An error occurred while fetching user objects:', error);
           }
         };
       
         fetchUserObjects();
-      }, []);
+      }, [userId]);
 
       useEffect(() => {
         console.log('Fetching user data...');
@@ -66,7 +65,7 @@ export default function HomeScreen({navigation, route}) {
         });
         } catch (error) {
             console.error(error);
-            console.log('An error occurred while logging out:', error.message);
+            Alert.alert('Ocorreu um error durante o logout:', error.message);
         }
       }
 
@@ -191,10 +190,10 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end'
     },
     button: {
-        width: '80%',
+        width: '60%',
         height: 36,
         backgroundColor: config.color.button,
-        borderRadius: 6,
+        borderRadius: 25,
         margin: 30,
         justifyContent: 'center',
         alignItems: 'center',   
