@@ -1,5 +1,5 @@
 import { useState,useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native'
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, Alert, KeyboardAvoidingView } from 'react-native'
 import config from '../config'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { auth } from '../firebase/index';
@@ -12,20 +12,18 @@ export default function LoginScreen({navigation}) {
 
     const handleLogin = async () => {
         if (!email || !password) {
-            console.error('Email and password fields cannot be empty');
+            Alert.alert('Por favor digite o e-mail e a senha.');
             return;
-        }
-    
+        } 
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const userId = userCredential.user.uid;
             navigation.navigate('Home', {userId});
         } catch (error) {
-            console.error(error);
             if (error.code === 'auth/invalid-email' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-                console.error('Invalid email, user not found, or wrong password');
+                Alert.alert('E-mail ou senha inválidos.');
             } else {
-                console.log('An error occurred during login:', error.message);
+                Alert.alert('Um error ocorreu durante o login: \n', error.message);
             }
         }
     };
@@ -44,7 +42,7 @@ export default function LoginScreen({navigation}) {
       }, []);
 
     return (
-        <SafeAreaView style={styles.container}>
+        <KeyboardAvoidingView style={styles.container} behavior='padding'>
             {/* HEADER */}
             <Image style={styles.logo} source={require('../assets/Logo.jpg')}/>
             {/* BODY */}
@@ -83,7 +81,7 @@ export default function LoginScreen({navigation}) {
                     </TouchableOpacity>
                 </View>
             </View>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
     )
 }
 
@@ -117,14 +115,13 @@ const styles = StyleSheet.create({
         width: '100%',
         borderWidth: 2,
         borderColor: config.color.primary,
-        borderRadius: 6,
         backgroundColor: 'white'
     },
     button: {
-        width: '100%',
+        width: '60%',
         height: 36,
         backgroundColor: config.color.button,
-        borderRadius: 6,
+        borderRadius: 20,
         margin: 30
     },
     text: {
