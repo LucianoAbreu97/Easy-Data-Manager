@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, ScrollView, BackHandler } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, KeyboardAvoidingView, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { auth, db, collection, doc, setDoc } from '../firebase/index';
 import config from '../config';
 import { Ionicons } from '@expo/vector-icons';
@@ -27,6 +27,10 @@ export default function NewTableScreen({navigation, route}) {
   };
 
   const handleAddLine = () => {
+    if (columns.length === 0) {
+      Alert.alert('Por favor, insira pelo menos uma coluna');
+      return;
+    }
     const newLine = columns.reduce((acc, column) => {
       acc[column.name] = '';
       return acc;
@@ -35,6 +39,22 @@ export default function NewTableScreen({navigation, route}) {
   };
 
 const saveTable = async () => {
+  if (!tableName) {
+    Alert.alert('Por favor, insira um nome para a tabela');
+    return;
+  }
+  if (columns.length === 0) {
+    Alert.alert('Por favor, insira pelo menos uma coluna');
+    return;
+  }
+  if (tableData.length === 0) {
+    Alert.alert('Por favor, insira pelo menos uma linha');
+    return;
+  }
+  if (tableData.some((line) => Object.values(line).some((value) => !value))) {
+    Alert.alert('Por favor, preencha todas as linhas');
+    return;
+  }
   try {
     const userRef = doc(collection(db, 'users'), userId);
     const newTableRef = doc(collection(userRef, 'objetos'), tableName);
@@ -44,11 +64,9 @@ const saveTable = async () => {
       colunas: columns.map(({ name, type }) => ({ name, tipo: type })),
       linhas: tableData,
     });
-    
-    console.log('Table saved successfully');
     navigation.navigate('Home', { userId: auth.currentUser.uid });
   } catch (error) {
-    console.error('An error occurred while saving the table:', error);
+    Alert.alert('Ocorreu um error durante a gravação da tabela: ', error);
   }
 };
 
@@ -78,7 +96,7 @@ const saveTable = async () => {
 
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView style={styles.container}>
       <View style={styles.headerContainer}>
         <TouchableOpacity style={styles.backButton} onPress={() => {navigation.navigate('Home', {userId: auth.currentUser.uid})}}>
         <Ionicons name="arrow-back" size={36} color="white" />
@@ -134,7 +152,7 @@ const saveTable = async () => {
               <Text>Salvar</Text>
             </TouchableOpacity>
           </View>
-    </View>
+    </KeyboardAvoidingView>
     )
 };
 
@@ -172,39 +190,37 @@ const saveTable = async () => {
     },
     textInput: {
       height: 40,
-      width: '60%',
+      width: '100%',
       borderWidth: 2,
       backgroundColor: config.color.secondary,
       justifyContent: 'center',
       textAlign: 'center',
-      borderRadius: 8,
       marginBottom: 10,
     },
     button: {
-      width: '80%',
+      width: '60%',
       height: 36,
       backgroundColor: config.color.button,
       justifyContent: 'center',
       alignItems: 'center',
-      borderRadius: 8,
+      borderRadius: 25,
       marginBottom: 10,
     },
     rowsContainer: {
       width: '100%',
-      backgroundColor: config.color.secondary,
-      borderWidth: 2,
       borderRadius: 8,
-      padding: 10,
       marginBottom: 14,
     },
     row: {
+      padding: 6,
       marginTop: 5,
-      borderWidth: 2,
-      borderRadius: 8,
-      borderColor: config.color.button,
     },
     rowInput: {
-      marginLeft: 10,
+      backgroundColor: 'white',
+      marginBottom: 10,
+      padding: 5,
+      borderWidth: 2,
+      borderBlockColor: 'black',
     },
     divisorText: {
       color: 'white',
@@ -224,7 +240,7 @@ const saveTable = async () => {
       backgroundColor: config.color.button,
       justifyContent: 'center',
       alignItems: 'center',
-      borderRadius: 8,
+      borderRadius: 25,
       marginHorizontal: 20,
     },
     backButton: {
