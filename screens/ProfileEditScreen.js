@@ -1,8 +1,7 @@
 import { useState } from 'react'
-import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity, Modal } from 'react-native'
+import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity, KeyboardAvoidingViewComponent, ScrollView, KeyboardAvoidingView, Alert } from 'react-native'
 import config from '../config'
 import { Ionicons } from '@expo/vector-icons';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { auth, db, doc, setDoc } from '../firebase/index';
 
 export default function RegisterScreen({navigation, route}) {
@@ -15,6 +14,10 @@ export default function RegisterScreen({navigation, route}) {
 
     const updateUserData = async () => {
         try {
+            if (!name || !surname) {
+                Alert.alert('Por favor, preencha todos os campos.');
+                return;
+            }
             const userRef = doc(db, 'users', userId);
             await setDoc(userRef, {
                 name: name,
@@ -23,47 +26,47 @@ export default function RegisterScreen({navigation, route}) {
             console.log('User data updated successfully');
             navigation.navigate('Home', {userId: auth.currentUser.uid});
         } catch (error) {
-            console.error('An error occurred while updating the user data:', error);
+            Alert.alert('Ocorreu um error durante a atualização dos dados: ', error);
         }
     };
 
     return (
-        <SafeAreaView style={styles.container}>
-            {/* HEADER */}
-            <View style={styles.backIcContainer}>
-                <TouchableOpacity
-                    onPress={() => {navigation.navigate('Home', {userId: auth.currentUser.uid})}}
-                >
-                    <Ionicons name="arrow-back" size={36} color="white" />
-                </TouchableOpacity>
-            </View>
-            <TouchableOpacity>
-                <Image style={styles.profileIcon} source={require('../assets/ProfileIc.png')} />
-            </TouchableOpacity>
-            {/* BODY */}
-            <View style={styles.bodyContainer}>
-                <View style={styles.bodyContainerAux}>
-                    <Text style={styles.text}>Nome</Text>
-                    <TextInput style={styles.input}
-                        onChangeText={(text) => setName(text)}
-                        value={name}
-                        padding={16}
-                    />
-                    <Text style={styles.text}>Sobrenome</Text>
-                    <TextInput style={styles.input}
-                        onChangeText={(text) => setSurname(text)}
-                        value={surname}
-                        padding={16}
-                    />
-                    <TouchableOpacity style={styles.button}>
-                        <Text style={[styles.text, {alignSelf: 'center'}]}>Nova Senha</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.button} onPress={updateUserData}>
-                        <Text style={[styles.text, {alignSelf: 'center'}]}>Salvar</Text>
+        <KeyboardAvoidingView style={styles.container} behavior='padding'>
+                <View style={styles.backIcContainer}>
+                    <TouchableOpacity
+                        onPress={() => {navigation.navigate('Home', {userId: auth.currentUser.uid})}}
+                    >
+                        <Ionicons name="arrow-back" size={36} color="white" />
                     </TouchableOpacity>
                 </View>
-            </View>
-        </SafeAreaView>
+                <TouchableOpacity>
+                    <Image style={styles.profileIcon} source={require('../assets/ProfileIc.png')} />
+                </TouchableOpacity>
+            <ScrollView style={styles.scrollView}>
+                <View style={styles.bodyContainer}>
+                    <View style={styles.bodyContainerAux}>
+                        <Text style={styles.text}>Nome</Text>
+                        <TextInput style={styles.input}
+                            onChangeText={(text) => setName(text)}
+                            value={name}
+                            padding={16}
+                        />
+                        <Text style={styles.text}>Sobrenome</Text>
+                        <TextInput style={styles.input}
+                            onChangeText={(text) => setSurname(text)}
+                            value={surname}
+                            padding={16}
+                        />
+                        <TouchableOpacity style={styles.button}>
+                            <Text style={[styles.text, {alignSelf: 'center'}]}>Nova Senha</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} onPress={updateUserData}>
+                            <Text style={[styles.text, {alignSelf: 'center'}]}>Salvar</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </ScrollView>
+        </KeyboardAvoidingView>
     )
 }
 
@@ -80,7 +83,11 @@ const styles = StyleSheet.create({
         top: 26,
         left: 16,
         padding: 10,
-
+    },
+    scrollView: {
+        flex: 1,
+        width: '100%',
+        height: 'auto',
     },
     profileIcon: {
         height: 120,
