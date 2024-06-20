@@ -29,17 +29,13 @@ export default function TableScreen({ route, navigation }) {
   const renderTableHeader = () => {
     return (
       <View style={styles.tableHeader}>
-        <FlatList
-          showsHorizontalScrollIndicator={false}
-          horizontal={true}
-          data={objectData?.colunas}
-          renderItem={({ item, index }) => (
-            <Text key={index} style={[styles.tableHeaderCell, { numberOfLines: 1 }]}>
-              {item.name}
+        {objectData?.colunas.map((column, index) => (
+          <ScrollView key={index} horizontal={true} style={{ flex: 1 }} showsHorizontalScrollIndicator={false}>
+            <Text style={[styles.tableHeaderCell, { numberOfLines: 1 }]}>
+              {column.name}
             </Text>
-          )}
-          contentContainerStyle={{ paddingHorizontal: 8 }}
-        />
+          </ScrollView>
+        ))}
       </View>
     );
   };
@@ -114,7 +110,7 @@ const styles = StyleSheet.create({
   tableHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: '100%',
+    height: 50,
   },
   tableHeaderCell: {
     flex: 1,
