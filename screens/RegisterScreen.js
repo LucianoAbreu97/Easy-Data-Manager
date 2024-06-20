@@ -81,6 +81,7 @@ export default function RegisterScreen({navigation}) {
                             onChangeText={setEmail}
                             value={email}
                             padding={16}
+                            keyboardType='email-address'
                         />
                         <Text style={styles.text}>Senha</Text>
                         <TextInput style={styles.input}
