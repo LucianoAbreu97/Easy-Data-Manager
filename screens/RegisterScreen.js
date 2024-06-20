@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity, ScrollView, Alert, KeyboardAvoidingView, Platform } from 'react-native'
 import config from '../config'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { auth, setDoc, db, doc, collection, addDoc } from '../firebase/index';
@@ -37,16 +37,16 @@ export default function RegisterScreen({navigation}) {
           console.log("User created successfully!");
           navigation.navigate('Login'); // Navigate to Login screen after successful registration
         } catch (error) {
-          console.error(error);
+          Alert.alert('Falha ao registrar. Tente novamente. ');
         }
       };
-
+//(password !== repeatPassword)
       const handleSignUp = async () => {
-        if (password !== repeatPassword) {
-          alert('Passwords do not match');
+        if (!name || !surname || !email || !password) {
+          Alert.alert('Por favor digite todos os dados.');
           return;
-        } if (!name || !surname || !email || !password) {
-          alert('Please fill in all fields');
+        } if (password !== repeatPassword) {
+          Alert.alert('As senhas não correspondem.');
           return;
         }
 
@@ -54,59 +54,62 @@ export default function RegisterScreen({navigation}) {
       };
 
     return (
-        <SafeAreaView style={styles.container}>
-            {/* HEADER */}
+        <KeyboardAvoidingView style={styles.container} 
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
+        >
                 <TouchableOpacity>
                     <Image style={styles.profileIcon} source={require('../assets/ProfileIc.png')} />
                 </TouchableOpacity>
-                {/* BODY */}
-            <View style={styles.bodyContainer}>
-                <View style={styles.bodyContainerAux}>
-                    <Text style={styles.text}>Nome</Text>
-                    <TextInput style={styles.input}
-                        onChangeText={setName}
-                        value={name}
-                        padding={16}
-                    />
-                    <Text style={styles.text}>Sobrenome</Text>
-                    <TextInput style={styles.input}
-                        onChangeText={setSurname}
-                        value={surname}
-                        padding={16}
-                    />
-                    <Text style={styles.text}>E-Mail</Text>
-                    <TextInput style={styles.input}
-                        onChangeText={setEmail}
-                        value={email}
-                        padding={16}
-                    />
-                    <Text style={styles.text}>Senha</Text>
-                    <TextInput style={styles.input}
-                        onChangeText={setPassword}
-                        value={password}
-                        secureTextEntry
-                        padding={16}
-                    />
-                    <Text style={styles.text}>Repita a Senha</Text>
-                    <TextInput style={styles.input}
-                        onChangeText={setRepeatPassword}
-                        value={repeatPassword}
-                        secureTextEntry
-                        padding={16}
-                    />
-                    <TouchableOpacity style={styles.button} onPress={handleSignUp}>
-                        <Text style={[styles.text, {alignSelf: 'center'}]}>Cadastrar</Text>
-                    </TouchableOpacity>
-                    {/* BOTTOM */}
-                    <View style={styles.bottomContainer}>
-                        <Text>Já tem uma conta?</Text>
-                        <TouchableOpacity>
-                            <Text style={[{color: config.color.button}, {marginLeft: 8}]} onPress={() => {navigation.navigate('Login')}}>Entrar</Text>
+            <ScrollView style={styles.scrollView}>
+                <View style={styles.bodyContainer}>
+                    <View style={styles.bodyContainerAux}>
+                        <Text style={styles.text}>Nome</Text>
+                        <TextInput style={styles.input}
+                            onChangeText={setName}
+                            value={name}
+                            padding={16}
+                        />
+                        <Text style={styles.text}>Sobrenome</Text>
+                        <TextInput style={styles.input}
+                            onChangeText={setSurname}
+                            value={surname}
+                            padding={16}
+                        />
+                        <Text style={styles.text}>E-Mail</Text>
+                        <TextInput style={styles.input}
+                            onChangeText={setEmail}
+                            value={email}
+                            padding={16}
+                        />
+                        <Text style={styles.text}>Senha</Text>
+                        <TextInput style={styles.input}
+                            onChangeText={setPassword}
+                            value={password}
+                            secureTextEntry
+                            padding={16}
+                        />
+                        <Text style={styles.text}>Repita a Senha</Text>
+                        <TextInput style={styles.input}
+                            onChangeText={setRepeatPassword}
+                            value={repeatPassword}
+                            secureTextEntry
+                            padding={16}
+                        />
+                        <TouchableOpacity style={styles.button} onPress={handleSignUp}>
+                            <Text style={[styles.text, {alignSelf: 'center'}]}>Cadastrar</Text>
                         </TouchableOpacity>
+                        {/* BOTTOM */}
+                        <View style={styles.bottomContainer}>
+                            <Text>Já tem uma conta?</Text>
+                            <TouchableOpacity>
+                                <Text style={[{color: config.color.button}, {marginLeft: 8}]} onPress={() => {navigation.navigate('Login')}}>Entrar</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
-            </View>
-        </SafeAreaView>
+            </ScrollView>
+        </KeyboardAvoidingView>
     )
 }
 
@@ -116,6 +119,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: config.color.primary,
+    },
+    scrollView: {
+        width: '100%',
+        alignSelf: 'center',
     },
     profileIcon: {
         height: 120,
@@ -144,24 +151,24 @@ const styles = StyleSheet.create({
         width: '100%',
         borderWidth: 2,
         borderColor: config.color.primary,
-        borderRadius: 6,
         backgroundColor: 'white'
     },
     text: {
         alignSelf: 'flex-start',
-        padding: 6,
+        padding: 4,
     },
     button: {
-        width: '100%',
+        width: '60%',
         height: 36,
         backgroundColor: config.color.button,
-        borderRadius: 6,
+        borderRadius: 20,
         margin: 30,
         justifyContent: 'center',
         alignItems: 'center'
     },
     bottomContainer: {
         flexDirection: 'row',
-        alignItems: 'center,'
+        alignItems: 'center',
+        paddingBottom: 20,
     },
 })
